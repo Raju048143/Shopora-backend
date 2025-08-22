@@ -19,9 +19,16 @@ export const signin = async (req, res) => {
 
     const token = jwt.sign(
       { userId: user._id, email: user.email },
-      process.env.JWT_SECRET || "e9b1f2c8d1f4a5b6c7d8e9f01234567890abcdef1234567890abcdef12345678",
+      process.env.JWT_SECRET,
       { expiresIn: "42h" }
     );
+    
+        res.cookie("token", token, {
+          httpOnly: true, 
+          secure: process.env.NODE_ENV === "production", 
+          sameSite: "strict",
+          maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
 
     res.status(200).json({
       message: "Login successful",

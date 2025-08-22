@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import User from "../Models/User.js";
 import UserModel from "../Models/User.js";
+import jwt from "jsonwebtoken";
 
 const signup = async (req, res) => {
   try {
@@ -21,14 +22,30 @@ const signup = async (req, res) => {
 
     await newUser.save();
 
-    res
-      .status(201)
-      .json({ message: "User registered successfully", userId: newUser._id });
+    const token = jwt.sign(
+      { id: newUser._id, email: newUser.email },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "30d",
+      }
+    );
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    res.status(201).json({
+      message: "User registered successfully",
+      userId: newUser._id,
+      token,
+    });
   } catch (err) {
     console.error("Signup error:", err);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
-
-export default signup
+export default signup;
