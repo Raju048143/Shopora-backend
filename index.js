@@ -8,7 +8,10 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTNED_URL,
+  credentials: true
+}));
 
 // Routes
 app.use("/auth", AuthRouter);
