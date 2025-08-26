@@ -33,7 +33,7 @@ export const signin = async (req, res) => {
     res.status(200).json({
       message: "Login successful",
       token,
-      user: { id: user._id, name: user.name, email: user.email },
+      user: { id: user._id, role: user.role, name: user.name, email: user.email },
     });
   } catch (err) {
     console.error("Signin error:", err);

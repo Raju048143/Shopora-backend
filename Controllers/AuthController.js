@@ -1,11 +1,10 @@
 import bcrypt from "bcryptjs";
 import User from "../Models/User.js";
-import UserModel from "../Models/User.js";
 import jwt from "jsonwebtoken";
 
 const signup = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password , role} = req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -14,16 +13,17 @@ const signup = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = new UserModel({
+    const newUser = new User({
       name,
       email,
       password: hashedPassword,
+      role: role || "user",
     });
 
     await newUser.save();
 
     const token = jwt.sign(
-      { id: newUser._id, email: newUser.email },
+      { id: newUser._id, email: newUser.email, role: newUser.role },
       process.env.JWT_SECRET,
       {
         expiresIn: "30d",
@@ -41,6 +41,7 @@ const signup = async (req, res) => {
       message: "User registered successfully",
       userId: newUser._id,
       token,
+      role: newUser.role,
     });
   } catch (err) {
     console.error("Signup error:", err);

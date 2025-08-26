@@ -1,8 +1,10 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
-import AuthRouter from "./Routes/AuthRouter.js"; 
 import "./Models/db.js";
+import AuthRouter from "./Routes/AuthRouter.js"; 
+import categoryRoutes from "./routes/categoryRoutes.js";
+import productRoutes from "./routes/productRoutes.js";
 const app = express();
 const PORT = process.env.PORT || 3000;
 const allowedOrigins = [
@@ -22,9 +24,11 @@ app.use(cors({
   credentials: true
 }));
 
+app.use(express.json());
 // Routes
 app.use("/auth", AuthRouter);
-
+app.use("/api/categories", categoryRoutes);
+app.use("/api/products", productRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
