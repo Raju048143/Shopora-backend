@@ -39,9 +39,13 @@ const signup = async (req, res) => {
 
     res.status(201).json({
       message: "User registered successfully",
-      userId: newUser._id,
+       user: {
+        id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+        role: newUser.role,
+      },
       token,
-      role: newUser.role,
     });
   } catch (err) {
     console.error("Signup error:", err);
