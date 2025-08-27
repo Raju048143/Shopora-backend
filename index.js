@@ -3,8 +3,8 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import "./Models/db.js";
 import AuthRouter from "./Routes/AuthRouter.js"; 
-import categoryRoutes from "./routes/categoryRoutes.js";
-import productRoutes from "./routes/productRoutes.js";
+import categoryRoutes from "./Routes/categoryRoutes.js";
+import productRoutes from "./Routes/productRoutes.js";
 const app = express();
 const PORT = process.env.PORT || 3000;
 const allowedOrigins = [
